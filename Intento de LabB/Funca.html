@@ -1,0 +1,28 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>¡Por fin anda! Mas o menos</title>
+	</head>
+	<body onload="cargarShaders();">
+		<canvas id="webglCanvas" width="1200" height="720">
+			Este mensaje no tendria que aparecer
+			Si aparece el navegador no soporta html5
+		</canvas>
+		<img id="crate-image" src="Text.jpg" width="0" height="0"></img>
+		<script src="gl-matrix.js"></script>
+		<script src="ironMan.obj"></script>
+		<script src="King2.obj"></script>
+		<script src="model.js"></script>
+		<script src="Vertex.glsl"></script>
+		<script src="Fragment.glsl"></script>
+
+		<script src="../99-common/OBJParser.js"></script>
+		<script src="../99-common/Utils.js"></script>
+		<script src="../99-common/VertexAttributeInfo.js"></script>
+		<script src="../99-common/VAOHelper.js"></script>
+		<script src="../99 - comun/cameras/Camera.js"></script>
+		<script src="../99 - comun/cameras/SphericalCamera.js"></script>
+		<script src="camaraCuaternion.js"></script>
+		<script src="Mio.js"></script>
+	</body>
+</html>

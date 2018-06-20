@@ -1,0 +1,72 @@
+# Blender MTL File: 'King_dice_model.blend'
+# Material Count: 5
+
+newmtl base_texture
+Ns 27.450980
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.200000 0.101757 0.191263
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Compu-Dono\Documents\Proyecto Grafica\Modelos Cuphed\king-dice\source\textures\Base_tex_ambient.png
+map_Bump -bm 0.100000 C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\Base_tex_ambient.png
+map_Ks C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\Base_tex.png
+map_Ns C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\Base_tex.png
+
+newmtl face
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.008017 0.008017 0.008017
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Compu-Dono\Documents\Proyecto Grafica\Modelos Cuphed\king-dice\source\textures\face_normals.png
+map_Bump -bm 0.100000 C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\face_ambient.png
+map_Ks C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\face_tex.png
+map_Ns C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\face_tex.png
+
+newmtl jacket
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.209801 0.184592 0.421692
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Compu-Dono\Documents\Proyecto Grafica\Modelos Cuphed\king-dice\source\jacket_ambient.png
+map_Bump -bm 0.200000 C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\jacket_ambient.png
+map_Ks C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\jacket.png
+map_Ns C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\jacket.png
+
+newmtl misc
+Ns 27.450980
+Ka 1.000000 1.000000 1.000000
+Kd 0.356161 0.175621 0.521125
+Ks 0.200000 0.200000 0.200000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\Compu-Dono\Documents\Proyecto Grafica\Modelos Cuphed\king-dice\source\textures\Misc_ambient.png
+map_Bump -bm 0.100000 C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\Misc_ambient.png
+map_Ks C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\Misc.png
+map_Ns C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\Misc.png
+
+newmtl others
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.147580 0.056288 0.236911
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Bump -bm 0.100000 C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\others_ambient.png
+map_Kd C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\others.png
+map_Ks C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\others.png
+map_Ns C:\\Users\\Compu-Dono\\Documents\\Proyecto Grafica\\Modelos Cuphed\\king-dice\\source\\textures\\others.png
