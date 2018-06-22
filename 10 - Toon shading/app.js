@@ -189,6 +189,7 @@ var InitDemo = function () {
 	gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 	gl.enable(gl.DEPTH_TEST);
 	gl.enable(gl.CULL_FACE);
+	gl.enable(gl.BLEND);
 	gl.frontFace(gl.CCW);
 	gl.cullFace(gl.BACK);
 	gl.clearDepth(100.0);
