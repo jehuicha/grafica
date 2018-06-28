@@ -32,6 +32,16 @@ function onKeyDown( event ) {
       }
       canJump = false;
       break;
+
+    case 111: //letra o | P
+    case 79: //left light
+      botonL1 =true;
+      break;
+
+    case 112: //letra p | P
+    case 80: //rigth light
+      botonL2 = true;
+      break;
   }
 };
 

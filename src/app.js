@@ -45,13 +45,18 @@ if ( havePointerLock ) {
 
 var camera, scene, renderer, controls, effect;
 var raycaster;
-var spot_light1, spot_light2;
+var spot_light1, spot_light2, spot1_aux, spot2_aux, spot_null;
 var controlsEnabled = false;
 var moveForward = false;
 var moveBackward = false;
 var moveLeft = false;
 var moveRight = false;
 var canJump = false;
+var stateL1 = true;
+var stateL2 = true;
+var botonL1 = false;
+var botonL2 = false;
+var angleL = 0.2;
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
@@ -96,6 +101,7 @@ function init() {
   scene.add( directionalLight );
 
     /* SPOT LIGHTS */
+  spot_null = new THREE.SpotLight(0x0 , 2);
   spot_light1 = new THREE.SpotLight( 0xffffff, 2 );
   spot_light1.angle = 0.2;
   spot_light1.penumbra = 1;
@@ -373,6 +379,30 @@ function animate() {
     prevTime = time;
   }
 
+  if( botonL1 === true ){
+    if (stateL1 === true){
+      spot_light1.angle = 0.0;
+      stateL1 = false;
+    }
+    else{
+      spot_light1.angle = angleL;
+      stateL1 = true;
+    }
+  botonL1 = false;
+  }
+
+  if( botonL2 === true ){
+    if (stateL2 === true){
+      spot_light2.angle = 0.0;
+      stateL2 = false;
+    }
+    else{
+      spot_light2.angle = angleL;
+      stateL2 = true;
+    }
+  botonL2 = false;
+  }
+
   effect.render( scene, camera );
 }
 
@@ -399,8 +429,13 @@ function buildGui() {
     spot_light2.distance = val;
   } );
   gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
-    spot_light1.angle = val;
-    spot_light2.angle = val;
+    if(stateL1 === true){
+      spot_light1.angle = val;
+    }
+    if(stateL2 === true){
+      spot_light2.angle = val;
+    }
+    angleL=val;
   } );
   gui.add( params, 'penumbra', 0, 1 ).onChange( function ( val ) {
     spot_light1.penumbra = val;
