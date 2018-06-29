@@ -33,14 +33,19 @@ function onKeyDown( event ) {
       canJump = false;
       break;
 
-    case 111: //letra o | P
+    case 111: //letra O | o
     case 79: //left light
       botonL1 =true;
       break;
 
-    case 112: //letra p | P
+    case 112: //letra P | p
     case 80: //rigth light
       botonL2 = true;
+      break;
+
+    case 67: //letra C | c
+    case 99: //Cambio de camara
+      botonCam = true;
       break;
   }
 };

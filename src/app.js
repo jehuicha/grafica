@@ -57,9 +57,12 @@ var stateL2 = true;
 var botonL1 = false;
 var botonL2 = false;
 var angleL = 0.2;
+var stateCam = 0;
+var botonCam = false;
 var prevTime = performance.now();
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
+var vzero = new THREE.Vector3();
 var gui;
 var objects = [];
 var mixers = [];
@@ -78,6 +81,10 @@ function init() {
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
   camera.position.set(0, 50, 0);
   camera.updateProjectionMatrix();
+
+  vzero.x = 0.0;
+  vzero.y = 50.0;
+  vzero.z = -200.0;
 
   /* SCENE */
   scene = new THREE.Scene();
@@ -401,6 +408,28 @@ function animate() {
       stateL2 = true;
     }
   botonL2 = false;
+  }
+
+  if ( botonCam === true ){
+    stateCam = (stateCam +1)%3;
+    switch (stateCam){
+      case 0:
+        camera.position.set(0, 50, 0);
+        camera.lookAt (vzero);
+        camera.updateProjectionMatrix();
+        break;
+      case 1:
+        camera.position.set(200, 100, 0);
+        camera.lookAt (vzero);
+        camera.updateProjectionMatrix();
+        break;
+      case 2:
+        camera.position.set(-200, 100, 0);
+        camera.lookAt (vzero);
+        camera.updateProjectionMatrix();
+        break;
+    }
+    botonCam = false;
   }
 
   effect.render( scene, camera );
