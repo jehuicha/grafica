@@ -204,8 +204,8 @@ function init() {
             child.receiveShadow = true;
           }
       });
-      object.scale.set(178, 305, 320);
-      object.position.set(-480, 10, -40);
+      object.scale.set(178, 311, 320);
+      object.position.set(-480, 12, -40);
       object.side = THREE.DoubleSide;
       scene.add(object);
       objects.push(object);
@@ -252,15 +252,16 @@ function init() {
             child.receiveShadow = true;
           }
       });
+      let pos_x = -212;
+      object.position.set(pos_x, 20, 0);
       object.scale.set(8, 8, 8);
       object.side = THREE.DoubleSide;
-      object.position.set(-285, 20, 0);
       scene.add(object);
       objects.push(object);
-      for ( var i = 0; i < 20; i ++ ) {
+      for ( var i = 0; i < 15; i ++ ) {
         for(var j=0; j<3; j++){
           let clone = object.clone();
-          clone.position.set(-285+i*30, 20, 60*j);
+          clone.position.set(pos_x+i*30, 20, 60*j);
           scene.add(clone);
           objects.push(clone);
         }
@@ -308,19 +309,19 @@ function init() {
         objects.push(object);
     });
 
-  /* REFLECTORES */
+  /* REFLECTORS */
   mtlLoader.load('reflector.mtl', function (materials) {
         materials.preload();
         objLoader3.setMaterials(materials);
         objLoader3.load('reflector.obj', function (object) {
           object.scale.set(10, 10, 10);
           object.side = THREE.DoubleSide;
-          object.position.set(-200, 300, -120);
+          object.position.set(-260, 300, -120);
           object.rotateY(Math.PI/180*30)
           scene.add(object);
           objects.push(object);
           let reflector2 = object.clone();
-          reflector2.position.set(200, 300, -120);
+          reflector2.position.set(260, 300, -120);
           reflector2.rotateY(Math.PI-0.5);
           scene.add(reflector2);
           objects.push(reflector2);
@@ -595,7 +596,7 @@ function buildGui() {
     spot_light1.distance = val;
     spot_light2.distance = val;
   } );
-  gui.add( params, 'angle', 0, Math.PI / 3 ).onChange( function ( val ) {
+  gui.add( params, 'angle', 0.11, 0.2 ).onChange( function ( val ) {
     if(stateL1 === true){
       spot_light1.angle = val;
     }
