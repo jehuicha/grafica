@@ -68,7 +68,7 @@ var mixers = [];
 var particles = [];
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
-var vzero = new THREE.Vector3()
+var vzero = new THREE.Vector3();
 
 init();
 buildGui();
@@ -76,8 +76,9 @@ animate();
 
 function init() {
   /* LISTENERS */
-  document.addEventListener('keydown', onKeyDown, false );
-  document.addEventListener('keyup', onKeyUp, false );
+  document.addEventListener('keydown', onKeyDownMovement, false );
+  document.addEventListener('keydown', onKeyDownCameraAndLight, false );
+  document.addEventListener('keyup', onKeyUpMovement, false );
   window.addEventListener( 'resize', onWindowResize, false );
 
   /* CAMERA */
@@ -85,23 +86,22 @@ function init() {
   camera.position.set(0, 150, 0);
   camera.updateProjectionMatrix();
 
-
-  // create an AudioListener and add it to the camera
-  var listener = new THREE.AudioListener();
-  camera.add( listener );
+  /* AUDIO */
+  var audio_listener = new THREE.AudioListener();
+  camera.add( audio_listener );
 
   // create a global audio source
-  var sound = new THREE.Audio( listener );
+  var audio_source = new THREE.Audio( audio_listener );
 
-  // load a sound and set it as the Audio object's buffer
+  // load a audio_source and set it as the Audio object's buffer
   var audioLoader = new THREE.AudioLoader();
-  audioLoader.load( 'God of War II OST The Glory of Sparta.ogg', function( buffer ) {
-  	sound.setBuffer( buffer );
-  	sound.setLoop( true );
-  	sound.setVolume( 1 );
-  	sound.setLoop(true);
+  audioLoader.load( 'sounds/God-of-War-II-OST-The-Glory-of-Sparta.ogg', function( buffer ) {
+  	audio_source.setBuffer( buffer );
+  	audio_source.setLoop( true );
+  	audio_source.setVolume( 1 );
+  	audio_source.setLoop(true);
 
-  	sound.play();
+  	audio_source.play();
   });
 
   /* SCENE */
@@ -153,12 +153,13 @@ function init() {
 
   /* LOADERS */
   var mtlLoader = new THREE.MTLLoader();
-  mtlLoader.setPath('/models/obj/');
-  mtlLoader.setTexturePath('/models/obj/');
+  mtlLoader.setPath('models/obj/');
   var objLoader = new THREE.OBJLoader();
   objLoader.setPath('models/obj/');
   var objLoader2 = new THREE.OBJLoader();
   objLoader2.setPath('models/obj/');
+  var objLoader3 = new THREE.OBJLoader();
+  objLoader3.setPath('models/obj/');
 
   /* MATERIALS */
   var iron_man_mat = new THREE.MeshToonMaterial( {
@@ -188,7 +189,7 @@ function init() {
   let scale1 = new THREE.Vector3(scale_factor1, scale_factor1, scale_factor1);
 
   /* CURTAINS */
-   objLoader.load('Curtains.obj', function (object) {
+   objLoader.load('curtains.obj', function (object) {
        object.traverse(function (child) {
            if (child instanceof THREE.Mesh) {
              child.material = curtain_mat;
@@ -208,7 +209,7 @@ function init() {
 
    /* FLOOR */
    var floor_pos = new THREE.Vector3(0,0,-325);
-   var floor_tex = new THREE.TextureLoader().load( "/textures/elements/wood.jpg" );
+   var floor_tex = new THREE.TextureLoader().load( "textures/elements/wood.jpg" );
    floor_tex.wrapS = floor_tex.wrapT = THREE.RepeatWrapping;
    floor_tex.anisotropy = 16;
    var shininess = 50, specular = 0x333333, bumpScale = 1;
@@ -236,7 +237,7 @@ function init() {
    objects.push(floor);
 
    /* CHAIRS */
-  objLoader.load('Conference Chair.obj', function (object) {
+  objLoader.load('chair.obj', function (object) {
       object.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
             child.material = curtain_mat;
@@ -244,7 +245,6 @@ function init() {
           }
       });
       object.scale.set(8, 8, 8);
-      //object.rotateY(-Math.PI);
       object.side = THREE.DoubleSide;
       object.position.set(-285, 20, 0);
       scene.add(object);
@@ -253,11 +253,9 @@ function init() {
         for(var j=0; j<3; j++){
           let clone = object.clone();
           clone.position.set(-285+i*30, 20, 60*j);
-          //clone.rotateY(-Math.PI/2);
           scene.add(clone);
           objects.push(clone);
         }
-
       }
   });
 
@@ -273,7 +271,7 @@ function init() {
               }
           });
           object.side = THREE.DoubleSide;
-          object.position.set(-20, 0, -400);
+          object.position.set(-20, 8, -400);
           object.scale.set(30, 30, 30);
           scene.add(object);
           objects.push(object);
@@ -281,7 +279,7 @@ function init() {
     });
 
   /* STAGE */
-  objLoader.load('caja.obj', function (object) {
+  objLoader.load('box.obj', function (object) {
         object.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.material = curtain_mat;
@@ -297,25 +295,24 @@ function init() {
         objects.push(object);
     });
 
-  /* FAROS */
-  objLoader.load('faro.obj', function (object) {
-      object.traverse(function (child) {
-          if (child instanceof THREE.Mesh) {
-            child.receiveShadow = true;
-          }
-      });
-      object.scale.set(10, 10, 10);
-      object.side = THREE.DoubleSide;
-      object.position.set(-200, 300, -120);
-      object.rotateY(Math.PI/180*30)
-      scene.add(object);
-      objects.push(object);
-      let faro2 = object.clone();
-      faro2.position.set(200, 300, -120);
-      faro2.rotateY(Math.PI-0.5);
-      scene.add(faro2);
-      objects.push(faro2);
-  });
+  /* REFLECTORES */
+  mtlLoader.load('reflector.mtl', function (materials) {
+        materials.preload();
+        objLoader3.setMaterials(materials);
+        objLoader3.load('reflector.obj', function (object) {
+          object.scale.set(10, 10, 10);
+          object.side = THREE.DoubleSide;
+          object.position.set(-200, 300, -120);
+          object.rotateY(Math.PI/180*30)
+          scene.add(object);
+          objects.push(object);
+          let reflector2 = object.clone();
+          reflector2.position.set(200, 300, -120);
+          reflector2.rotateY(Math.PI-0.5);
+          scene.add(reflector2);
+          objects.push(reflector2);
+        });
+    });
 
   /* ANIMATIONS */
   var gltfLoader = new THREE.GLTFLoader();
@@ -323,8 +320,8 @@ function init() {
   let scale_factor3 = scale_factor2 * 2;
   let scale2 = new THREE.Vector3(scale_factor2, scale_factor2, scale_factor2);
   let scale3 = new THREE.Vector3(scale_factor3, scale_factor3, scale_factor3);
-  let kratos_pos = new THREE.Vector3(-160, 30, floor_pos.z + 120);
-  let robot_pos = new THREE.Vector3(160, 30, floor_pos.z + 120);
+  let kratos_pos = new THREE.Vector3(-160, 22, floor_pos.z + 120);
+  let robot_pos = new THREE.Vector3(160, 23, floor_pos.z + 120);
 
   /* KRATOS */
   gltfLoader.load( 'models/gltf/Kratos/Kratos.gltf', function ( gltf ) {
@@ -360,14 +357,14 @@ function init() {
   });
 
   /* ROBOT */
-  mtlLoader.load('Robot.mtl', function (materials) {
+  mtlLoader.load('robot.mtl', function (materials) {
       materials.preload();
       objLoader.setMaterials(materials);
       objLoader.load('robot.obj', function (object) {
         object.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
               child.castShadow = true;
-              // child.receiveShadow = true;
+              child.receiveShadow = true;
             }
         });
         object.scale.copy(scale3);
@@ -386,7 +383,7 @@ function init() {
   });
 
   /* PARTICLES */
-  var spark_tex = new THREE.TextureLoader().load( "textures/sprites/spark.png" );
+  var spark_tex = new THREE.TextureLoader().load( "textures/sprites/bulb.png" );
   spark_tex.wrapS = spark_tex.wrapT = THREE.RepeatWrapping;
   spark_tex.anisotropy = 16;
   var material = new THREE.SpriteMaterial( {
@@ -461,8 +458,8 @@ function animate() {
       }
     }
 
-    if( botonL1 === true ){
-      if (stateL1 === true){
+    if( botonL1 ){
+      if (stateL1 ){
         spot_light1.angle = 0.0;
         stateL1 = false;
       }
@@ -473,8 +470,8 @@ function animate() {
     botonL1 = false;
     }
 
-    if( botonL2 === true ){
-      if (stateL2 === true){
+    if( botonL2 ){
+      if (stateL2 ){
         spot_light2.angle = 0.0;
         stateL2 = false;
       }
@@ -485,25 +482,30 @@ function animate() {
     botonL2 = false;
     }
 
-    if ( botonCam === true ){
+    if ( botonCam ){
       stateCam = (stateCam +1)%3;
       switch (stateCam){
         case 0:
-          camera.position.set(0, 50, 0);
-          camera.lookAt (vzero);
-          camera.updateProjectionMatrix();
+          camera.position.set(0, 150, 0);
+          document.addEventListener('keydown', onKeyDownMovement, false );
+          document.addEventListener('keyup', onKeyUpMovement, false );
           break;
         case 1:
-          camera.position.set(200, 100, 0);
-          camera.lookAt (vzero);
-          camera.updateProjectionMatrix();
+          camera.position.set(200, 150, 0);
+          document.removeEventListener('keydown', onKeyDownMovement, false );
+          document.removeEventListener('keyup', onKeyUpMovement, false );
           break;
         case 2:
-          camera.position.set(-200, 100, 0);
-          camera.lookAt (vzero);
-          camera.updateProjectionMatrix();
+          camera.position.set(-200, 150, 0);
+          document.removeEventListener('keydown', onKeyDownMovement, false );
+          document.removeEventListener('keyup', onKeyUpMovement, false );
           break;
       }
+      camera.updateProjectionMatrix();
+      controls = new THREE.PointerLockControls(camera);
+      controls.enabled = true;
+      scene.remove(controls.getObject());
+      scene.add(controls.getObject());
       botonCam = false;
     }
 

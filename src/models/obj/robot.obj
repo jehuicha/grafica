@@ -1,6 +1,4 @@
-# Blender v2.79 (sub 0) OBJ File: ''
-# www.blender.org
-mtllib Robot.mtl
+mtllib robot.mtl
 o LP_Body
 v -0.007800 7.999100 2.661201
 v -0.007700 8.050300 2.389001

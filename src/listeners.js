@@ -4,7 +4,7 @@ function onWindowResize() {
   renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-function onKeyDown( event ) {
+function onKeyDownMovement( event ) {
   switch ( event.keyCode ) {
     case 38: // up
     case 87: // w
@@ -28,7 +28,7 @@ function onKeyDown( event ) {
 
     case 32: // space
       if ( canJump === true ) {
-        velocity.y += 3000; // Default 350
+        velocity.y += 350; // Default 350
       }
       canJump = false;
       break;
@@ -50,7 +50,7 @@ function onKeyDown( event ) {
   }
 };
 
-function onKeyUp(event) {
+function onKeyUpMovement(event) {
   switch( event.keyCode ) {
     case 38: // up
     case 87: // w
@@ -70,6 +70,25 @@ function onKeyUp(event) {
     case 39: // right
     case 68: // d
       moveRight = false;
+      break;
+  }
+};
+
+function onKeyDownCameraAndLight( event ) {
+  switch ( event.keyCode ) {
+    case 111: //letra O | o
+    case 79: //left light
+      botonL1 =true;
+      break;
+
+    case 112: //letra P | p
+    case 80: //rigth light
+      botonL2 = true;
+      break;
+
+    case 67: //letra C | c
+    case 99: //Cambio de camara
+      botonCam = true;
       break;
   }
 };

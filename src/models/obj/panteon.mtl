@@ -1,7 +1,6 @@
-# Blender MTL File: 'None'
 # Material Count: 2
 
-newmtl _
+newmtl mat1
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
@@ -10,9 +9,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd 1.png
+map_Kd panteon_mat1.png
 
-newmtl _2
+newmtl mat2
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 1.000000 1.000000 1.000000
@@ -21,4 +20,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd 2.png
+map_Kd panteon_mat2.png
