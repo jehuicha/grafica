@@ -56,7 +56,7 @@ var stateL1 = true;
 var stateL2 = true;
 var botonL1 = false;
 var botonL2 = false;
-var angleL = 0.2;
+var angleL = 0.16;
 var stateCam = 0;
 var botonCam = false;
 var prevTime = performance.now();
@@ -69,15 +69,15 @@ var particles = [];
 var velocity = new THREE.Vector3();
 var direction = new THREE.Vector3();
 var vzero = new THREE.Vector3();
-var robot_shadow = [];
-var panteon_shadow1 = [];
-var panteon_shadow2 = [];
 var floor;
-var normalVector = new THREE.Vector3( 0, 1, 0 );
-var planeConstant = 23; // this value must be slightly higher than the groundMesh's y position of 0.0
-var floorPlane = new THREE.Plane( normalVector, planeConstant );
-var spot_light1_position4D = new THREE.Vector4();
-var spot_light2_position4D = new THREE.Vector4();
+// var robot_shadow = [];
+// var panteon_shadow1 = [];
+// var panteon_shadow2 = [];
+// var normalVector = new THREE.Vector3( 0, 1, 0 );
+// var planeConstant = 23; // this value must be slightly higher than the groundMesh's y position of 0.0
+// var floorPlane = new THREE.Plane( normalVector, planeConstant );
+// var spot_light1_position4D = new THREE.Vector4();
+// var spot_light2_position4D = new THREE.Vector4();
 
 init();
 buildGui();
@@ -91,8 +91,8 @@ function init() {
   window.addEventListener( 'resize', onWindowResize, false );
 
   /* CAMERA */
-  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
-  camera.position.set(0, 150, 200);
+  camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1700 );
+  camera.position.set(0, 300, 200);
   camera.updateProjectionMatrix();
 
   /* AUDIO */
@@ -107,7 +107,7 @@ function init() {
   audioLoader.load( 'sounds/God-of-War-II-OST-The-Glory-of-Sparta.ogg', function( buffer ) {
   	audio_source.setBuffer( buffer );
   	audio_source.setLoop( true );
-  	audio_source.setVolume( 1 );
+  	audio_source.setVolume( 0.05 );
   	audio_source.setLoop(true);
 
   	audio_source.play();
@@ -126,17 +126,13 @@ function init() {
 
   /* LIGHTS */
     /* AMBIENT LIGHT */
-  var ambient_light = new THREE.AmbientLight( 0xffffff, 0.07 );
+  var ambient_light = new THREE.AmbientLight( 0xffffff, 0.04 );
   scene.add( ambient_light );
-
-  /* DIRECTIONAL LIGHT*/
-  var directionalLight = new THREE.DirectionalLight( 0xffffff, 1 );
-  directionalLight.position.set(0, 500, 50);
-  // scene.add( directionalLight );
 
     /* SPOT LIGHTS */
   spot_light1 = new THREE.SpotLight( 0xffffff, 2 );
-  spot_light1.angle = 0.2;
+  spot_light1.position.set(-275, 280, -120);
+  spot_light1.angle = 0.16;
   spot_light1.penumbra = 1;
   spot_light1.decay = 2;
   spot_light1.distance = 3000;
@@ -146,17 +142,25 @@ function init() {
   spot_light1.shadow.camera.near = 100;
   spot_light1.shadow.camera.far = 1000;
   scene.add( spot_light1 );
-  spot_light2 = new THREE.SpotLight();
-  spot_light2.copy(spot_light1);
-  spot_light2.angle = spot_light1.angle * 2;
+  // spot_light1_position4D.x = spot_light1.position.x;
+  // spot_light1_position4D.y = spot_light1.position.y;
+  // spot_light1_position4D.z = spot_light1.position.z;
+  // spot_light1_position4D.w = 0.001;
+  spot_light2 = spot_light1.clone();
+  spot_light2.position.set(275, 280, -120);
+  spot_light2.angle = spot_light1.angle + 0.25;
   scene.add( spot_light2 );
+  // spot_light2_position4D.x = spot_light2.position.x;
+  // spot_light2_position4D.y = spot_light2.position.y;
+  // spot_light2_position4D.z = spot_light2.position.z;
+  // spot_light2_position4D.w = 0.001;
+
   /* GROUND */
   var ground_geom = new THREE.PlaneBufferGeometry( 2000, 2000, 100, 100 );
   ground_geom.rotateX( - Math.PI / 2 );
-  var ground_mat = new THREE.MeshPhongMaterial( { color: 0x0a0f44, dithering: true } );
+  var ground_mat = new THREE.MeshBasicMaterial( { color: 0x0a0f44, dithering: true, ambient: 0x1a234d} );
   var ground = new THREE.Mesh( ground_geom, ground_mat );
   ground.position.set(0, 0, 0);
-  ground.receiveShadow = true;
   scene.add(ground);
 
   /* LOADERS */
@@ -170,13 +174,6 @@ function init() {
   objLoader3.setPath('models/obj/');
 
   /* MATERIALS */
-  var iron_man_mat = new THREE.MeshToonMaterial( {
-    color: 0xfff000,
-    specular: 0xffffff,
-    shininess: 30,
-    side: THREE.DoubleSide,
-    dithering: true
-  } );
   var floor_mat = new THREE.MeshPhongMaterial( {
     color: 0xDEB887,
     specular: 0xffffff,
@@ -184,12 +181,13 @@ function init() {
     side: THREE.DoubleSide,
     dithering: true
   } );
-  var curtains_mat = new THREE.MeshPhongMaterial( {
+  var stage_mat = new THREE.MeshPhongMaterial( {
     color: 0x8B0000,
     specular: 0xffffff,
-    shininess: 50,
+    shininess: 0,
     side: THREE.DoubleSide,
-    dithering: true
+    dithering: true,
+    clipIntersection: true
   } );
 
   /* OBJECTS */
@@ -200,17 +198,18 @@ function init() {
   objLoader.load('curtains.obj', function (object) {
       object.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
-            child.material = curtains_mat;
+            child.material = stage_mat;
             child.receiveShadow = true;
+            child.castShadow = true;
           }
       });
-      object.scale.set(178, 311, 320);
-      object.position.set(-480, 12, -40);
+      object.scale.set(178, 300, 320);
+      object.position.set(-480, -6, -40);
       object.side = THREE.DoubleSide;
       scene.add(object);
       objects.push(object);
       let curtains2 = object.clone();
-      curtains2.position.set(105, 10, -40);
+      curtains2.position.set(105, -7, -40);
       scene.add(curtains2);
       objects.push(curtains2);
     });
@@ -248,11 +247,11 @@ function init() {
   objLoader.load('chair.obj', function (object) {
       object.traverse(function (child) {
           if (child instanceof THREE.Mesh) {
-            child.material = curtains_mat;
+            child.material = stage_mat;
             child.receiveShadow = true;
           }
       });
-      let pos_x = -212;
+      let pos_x = -215;
       object.position.set(pos_x, 20, 0);
       object.scale.set(8, 8, 8);
       object.side = THREE.DoubleSide;
@@ -275,18 +274,19 @@ function init() {
         objLoader2.load('panteon.obj', function (object) {
           object.traverse(function (child) {
               if (child instanceof THREE.Mesh) {
-                let child_shadow1 = new THREE.ShadowMesh(child);
-                let child_shadow2 = new THREE.ShadowMesh(child);
-                scene.add(child_shadow1);
-                scene.add(child_shadow2);
-                panteon_shadow1.push(child_shadow1);
-                panteon_shadow2.push(child_shadow2);
+                // let child_shadow1 = new THREE.ShadowMesh(child);
+                // let child_shadow2 = new THREE.ShadowMesh(child);
+                // scene.add(child_shadow1);
+                // scene.add(child_shadow2);
+                // panteon_shadow1.push(child_shadow1);
+                // panteon_shadow2.push(child_shadow2);
+                child.castShadow = true;
                 child.receiveShadow = true;
               }
           });
           object.side = THREE.DoubleSide;
-          object.position.set(-20, 8, -400);
-          object.scale.set(30, 30, 30);
+          object.position.set(-20, 8, -420);
+          object.scale.set(40, 30, 30);
           scene.add(object);
           objects.push(object);
         });
@@ -296,13 +296,13 @@ function init() {
   objLoader.load('stage.obj', function (object) {
         object.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
-              child.material = curtains_mat;
+              child.material = stage_mat;
               child.receiveShadow = true;
             }
         });
 
-        object.position.set(0, -45, -310)
-        object.scale.set(265, 170, 345);
+        object.position.set(0, -75, -310);
+        object.scale.set(265.1, 170, 345.1);
         object.rotateY(-Math.PI/2);
         object.side = THREE.DoubleSide;
         scene.add(object);
@@ -316,13 +316,13 @@ function init() {
         objLoader3.load('reflector.obj', function (object) {
           object.scale.set(10, 10, 10);
           object.side = THREE.DoubleSide;
-          object.position.set(-260, 300, -120);
-          object.rotateY(Math.PI/180*30)
+          object.position.copy(spot_light1.position);
+          object.rotateY(0.75);
           scene.add(object);
           objects.push(object);
           let reflector2 = object.clone();
-          reflector2.position.set(260, 300, -120);
-          reflector2.rotateY(Math.PI-0.5);
+          reflector2.position.copy(spot_light2.position);
+          reflector2.rotateY(Math.PI/2);
           scene.add(reflector2);
           objects.push(reflector2);
         });
@@ -331,11 +331,11 @@ function init() {
   /* ANIMATIONS */
   var gltfLoader = new THREE.GLTFLoader();
   let scale_factor2 = 7;
-  let scale_factor3 = scale_factor2 * 2;
+  let scale_factor3 = scale_factor2 * 1.8;
   let scale2 = new THREE.Vector3(scale_factor2, scale_factor2, scale_factor2);
   let scale3 = new THREE.Vector3(scale_factor3, scale_factor3, scale_factor3);
-  let kratos_pos = new THREE.Vector3(-160, 22, floor_pos.z + 120);
-  let robot_pos = new THREE.Vector3(160, 23, floor_pos.z + 120);
+  let kratos_pos = new THREE.Vector3(-160, 22, floor_pos.z + 80);
+  let robot_pos = new THREE.Vector3(160, 23, floor_pos.z + 80);
 
   /* KRATOS */
   gltfLoader.load('models/gltf/Kratos/Kratos.gltf', function (gltf) {
@@ -361,15 +361,16 @@ function init() {
     object.position.copy(kratos_pos);
     scene.add(object);
     objects.push(object);
-    spot_light1.position.copy(object.position);
-    spot_light1.position.add(new THREE.Vector3(0, 300, 300));
-    spot_light1_position4D.x = spot_light1.position.x;
-    spot_light1_position4D.y = spot_light1.position.y;
-    spot_light1_position4D.z = spot_light1.position.z;
-    spot_light1_position4D.w = 0.001; // more of a directional Light value
+    // spot_light1.position.copy(object.position);
+    // spot_light1.position.add(new THREE.Vector3(0, 300, 300));
+    // spot_light1.position.set(-275, 300, -120);
+    // spot_light1_position4D.x = spot_light1.position.x;
+    // spot_light1_position4D.y = spot_light1.position.y;
+    // spot_light1_position4D.z = spot_light1.position.z;
+    // spot_light1_position4D.w = 0.001; // more of a directional Light value
     let target = new THREE.Object3D();
     target.position.copy(object.position);
-    target.position.add(new THREE.Vector3(0, 55, 0));
+    target.position.add(new THREE.Vector3(15, 45, 0));
     spot_light1.target = target;
     scene.add(spot_light1.target);
   });
@@ -381,9 +382,10 @@ function init() {
       objLoader.load('robot.obj', function (object) {
         object.traverse(function (child) {
             if (child instanceof THREE.Mesh) {
-              let child_shadow = new THREE.ShadowMesh(child);
-              scene.add(child_shadow);
-              robot_shadow.push(child_shadow);
+              // let child_shadow = new THREE.ShadowMesh(child);
+              // scene.add(child_shadow);
+              // robot_shadow.push(child_shadow);
+              child.castShadow = true;
               child.receiveShadow = true;
             }
         });
@@ -392,15 +394,16 @@ function init() {
         object.position.copy(robot_pos);
         scene.add(object);
         objects.push(object);
-        spot_light2.position.copy(object.position);
-        spot_light2.position.add(new THREE.Vector3(0, 300, 300));
-        spot_light2_position4D.x = spot_light2.position.x;
-        spot_light2_position4D.y = spot_light2.position.y;
-        spot_light2_position4D.z = spot_light2.position.z;
-        spot_light2_position4D.w = 0.001; // more of a directional Light value
+        // spot_light2.position.copy(object.position);
+        // spot_light2.position.add(new THREE.Vector3(0, 300, 300));
+        // spot_light2.position.set(275, 300, -120);
+        // spot_light2_position4D.x = spot_light2.position.x;
+        // spot_light2_position4D.y = spot_light2.position.y;
+        // spot_light2_position4D.z = spot_light2.position.z;
+        // spot_light2_position4D.w = 0.001; // more of a directional Light value
         let target = new THREE.Object3D();
         target.position.copy(object.position);
-        target.position.add(new THREE.Vector3(0, 55, 0));
+        target.position.add(new THREE.Vector3(-15, 45, 0));
         spot_light2.target = target;
         scene.add(spot_light2.target);
       });
@@ -444,7 +447,7 @@ function animate() {
     var intersections = raycaster.intersectObjects( objects, true );
     var onObject = intersections.length > 0;
     var time = performance.now();
-    var delta = ( time - prevTime ) / 333;
+    var delta = ( time - prevTime ) / 200;
 
     velocity.x -= velocity.x * 10.0 * delta;
     velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
@@ -480,14 +483,14 @@ function animate() {
       mixers[ i ].update( ( time - prevTime ) * 0.001  );
     }
 
-    for ( var i = 0; i < robot_shadow.length; i ++ ) {
-      robot_shadow[i].update(floorPlane, spot_light2_position4D );
-    }
-
-    for ( var i = 0; i < panteon_shadow1.length; i ++ ) {
-      panteon_shadow1[i].update(floorPlane, spot_light1_position4D );
-      panteon_shadow2[i].update(floorPlane, spot_light2_position4D );
-    }
+    // for ( var i = 0; i < robot_shadow.length; i ++ ) {
+    //   robot_shadow[i].update(floorPlane, spot_light2_position4D );
+    // }
+    //
+    // for ( var i = 0; i < panteon_shadow1.length; i ++ ) {
+    //   panteon_shadow1[i].update(floorPlane, spot_light1_position4D );
+    //   panteon_shadow2[i].update(floorPlane, spot_light2_position4D );
+    // }
 
     if( botonL1 ){
       if (stateL1 ){
@@ -552,7 +555,7 @@ function initParticle( particle, delay) {
   var particle = this instanceof THREE.Sprite ? this : particle;
   var delay = delay !== undefined ? delay : 0;
   // var x= 95, y = 160, z= -238;
-  var x=145,y=160,z=-205;
+  var x=145,y=160,z=-235;
   particle.position.set(x, y, z);
   particle.scale.x = particle.scale.y = Math.random() * 20;
 
@@ -596,12 +599,12 @@ function buildGui() {
     spot_light1.distance = val;
     spot_light2.distance = val;
   } );
-  gui.add( params, 'angle', 0.11, 0.2 ).onChange( function ( val ) {
+  gui.add( params, 'angle', 0, 0.42 ).onChange( function ( val ) {
     if(stateL1 === true){
       spot_light1.angle = val;
     }
     if(stateL2 === true){
-      spot_light2.angle = 2 * val;
+      spot_light2.angle = val + 0.25;
     }
     angleL=val;
   } );
