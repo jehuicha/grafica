@@ -92,7 +92,7 @@ function init() {
 
   /* CAMERA */
   camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1700 );
-  camera.position.set(0, 300, 200);
+  camera.position.set(0, 150, 200);
   camera.updateProjectionMatrix();
 
   /* AUDIO */
